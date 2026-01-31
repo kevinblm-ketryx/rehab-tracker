@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patellar Tendon Rehab + Training</title>
+    <style>
+        :root {
+            --primary: #1a4d2e;
+            --primary-light: #2d5016;
+            --accent: #00897b;
+            --warning: #e65100;
+            --danger: #c62828;
+            --bg: #f5f5f0;
+            --card: #fff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+            min-height: calc(100vh - 20px);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: #e8f5e9;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { font-size: 1.2em; }
+        .header-badges { display: flex; gap: 8px; }
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        /* Nav */
+        .nav {
+            display: flex;
+            background: #e8f0e8;
+            border-bottom: 1px solid #ccc;
+        }
+        .nav-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            background: none;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        .nav-btn:hover { background: #d8e8d8; }
+        .nav-btn.active { background: var(--bg); border-bottom: 3px solid var(--primary); }
+
+        /* Content */
+        .content { padding: 15px; }
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* Cards */
+        .card {
+            background: var(--card);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+        }
+        .card-head {
+            padding: 12px 15px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        .card-head.green { background: var(--primary); color: white; }
+        .card-head.teal { background: var(--accent); color: white; }
+        .card-head.gray { background: #546e7a; color: white; }
+        .card-body { padding: 15px; }
+
+        /* Block with completion checks */
+        .block-card .card-body { padding: 10px 15px; }
+        .block-exercises {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 12px;
+        }
+        .block-exercises li {
+            margin-bottom: 4px;
+            margin-left: 18px;
+        }
+        .block-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        .block-label { font-size: 0.85em; color: #666; }
+        .block-checks { display: flex; gap: 6px; }
+        .check-circle {
+            width: 36px;
+            height: 36px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: #999;
+            transition: all 0.15s;
+        }
+        .check-circle:hover { border-color: var(--primary); color: var(--primary); }
+        .check-circle.done {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Session Picker */
+        .session-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .session-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .session-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .session-card h4 { color: var(--primary); margin-bottom: 4px; font-size: 0.95em; }
+        .session-card p { font-size: 0.8em; color: #666; }
+        .session-card.disabled { opacity: 0.5; cursor: not-allowed; }
+        .session-card.disabled:hover { border-color: #ddd; transform: none; }
+
+        /* Duration Pills */
+        .duration-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .dur-pill {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.15s;
+        }
+        .dur-pill:hover { border-color: var(--primary); }
+        .dur-pill.active { border-color: var(--primary); background: var(--primary); color: white; }
+
+        /* Exercise Table */
+        .ex-table {
+            width: 100%;
+            font-size: 0.9em;
+        }
+        .ex-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            gap: 10px;
+        }
+        .ex-row:last-child { border-bottom: none; }
+        .ex-check {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .ex-check:hover { border-color: var(--primary); }
+        .ex-check.done { background: var(--primary); border-color: var(--primary); color: white; }
+        .ex-info { flex: 1; }
+        .ex-name { font-weight: 600; color: #333; }
+        .ex-detail { font-size: 0.85em; color: #666; margin-top: 2px; }
+        .ex-prescription {
+            text-align: right;
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 100px;
+        }
+        .ex-prescription .weight {
+            font-size: 1.1em;
+        }
+        .ex-prescription .scheme {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+        }
+        .alert-info { background: #e0f2f1; border-left: 4px solid var(--accent); }
+        .alert-warn { background: #fff3e0; border-left: 4px solid var(--warning); }
+        .alert-danger { background: #ffebee; border-left: 4px solid var(--danger); }
+        .alert strong { display: block; margin-bottom: 4px; }
+
+        /* Pain Input */
+        .pain-row {
+            display: flex;
+            gap: 4px;
+        }
+        .pain-btn {
+            flex: 1;
+            padding: 10px 4px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+        .pain-btn:hover { border-color: #999; }
+        .pain-btn.sel { background: var(--primary); border-color: var(--primary); color: white; }
+        .pain-btn.sel.warn { background: var(--warning); border-color: var(--warning); }
+        .pain-btn.sel.bad { background: var(--danger); border-color: var(--danger); }
+
+        /* Progress Bars */
+        .prog-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        .prog-label { width: 100px; font-size: 0.85em; color: #666; }
+        .prog-bar-bg {
+            flex: 1;
+            height: 24px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .prog-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 0.8em;
+            font-weight: 600;
+            transition: width 0.3s;
+        }
+        .prog-bar.up { background: #4caf50; }
+        .prog-bar.same { background: #ff9800; }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #2d5016; }
+        .btn-outline { background: white; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: #e8f5e9; }
+        .btn-sm { padding: 6px 12px; font-size: 0.85em; }
+        .btn-block { width: 100%; }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .stat-box {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-val { font-size: 1.8em; font-weight: 700; color: var(--primary); }
+        .stat-lbl { font-size: 0.75em; color: #666; }
+
+        /* Phase Cards */
+        .phase-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .phase-card {
+            flex: 1;
+            min-width: 120px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .phase-card h5 { font-size: 0.85em; color: var(--primary); margin-bottom: 4px; }
+        .phase-card p { font-size: 0.75em; color: #666; }
+        .phase-card.current { border-color: var(--primary); background: #e8f5e9; }
+        .phase-card.done { border-color: #4caf50; opacity: 0.6; }
+
+        /* Modal */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-bg.show { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-head {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+        .modal-body { padding: 15px; }
+        .modal-foot {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* Collapsible */
+        .collapse-head {
+            padding: 12px 15px;
+            background: #f5f5f5;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #666;
+        }
+        .collapse-head:hover { background: #eee; }
+        .collapse-body { display: none; padding: 15px; }
+        .collapse-body.open { display: block; }
+
+        @media (max-width: 500px) {
+            .session-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .ex-row { flex-wrap: wrap; }
+            .ex-prescription { width: 100%; text-align: left; margin-top: 5px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🦵 Tendon Rehab</h1>
+        <div class="header-badges">
+            <span class="badge" id="phaseBadge">Phase 0</span>
+            <span class="badge" id="weekBadge">Week 1</span>
+        </div>
+    </div>
+
+    <div class="nav">
+        <button class="nav-btn active" data-view="today">Today</button>
+        <button class="nav-btn" data-view="progress">Progress</button>
+        <button class="nav-btn" data-view="program">Program</button>
+        <button class="nav-btn" data-view="settings">⚙</button>
+    </div>
+
+    <div class="content">
+        <!-- TODAY VIEW -->
+        <div id="today" class="view active"></div>
+
+        <!-- PROGRESS VIEW -->
+        <div id="progress" class="view"></div>
+
+        <!-- PROGRAM VIEW -->
+        <div id="program" class="view"></div>
+
+        <!-- SETTINGS VIEW -->
+        <div id="settings" class="view"></div>
+    </div>
+</div>
+
+<!-- Pain Modal -->
+<div class="modal-bg" id="painModal">
+    <div class="modal">
+        <div class="modal-head">Morning Pain Check</div>
+        <div class="modal-body">
+            <p style="margin-bottom:12px;color:#666">Rate your knee pain this morning (0=none, 10=worst)</p>
+            <div class="pain-row" id="painBtns"></div>
+            <p style="margin-top:15px;font-size:0.85em;color:#888">
+                <strong>24-Hour Rule:</strong> If pain is higher than baseline, consider reducing load intensity today.
+            </p>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-outline" onclick="closeModal('painModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="savePain()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Session Modal -->
+<div class="modal-bg" id="sessionModal">
+    <div class="modal">
+        <div class="modal-head">Complete Session</div>
+        <div class="modal-body" id="sessionModalBody"></div>
+        <div class="modal-foot">
+            <button class="btn btn-outline" onclick="closeModal('sessionModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="finishSession()">Complete Session</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// =====================================================
+// DATA & STATE
+// =====================================================
+
+const USER = {
+    bodyweight: 99.5,
+    height: 199,
+    startDate: null,
+    baselines: {
+        legPress: 120,
+        legExtension: 50,
+        squat: 60,  // Starting conservative given pain history
+        rdl: 60,
+        hipThrust: 80,
+        bench: 72.5,
+        row: 50,  // 25kg per hand = ~50kg barbell equivalent
+        ohp: 35   // Starting conservative
+    }
+};
+
+// Phase definitions
+const PHASES = {
+    0: {
+        name: "Find Your Floor",
+        weeks: "1-3",
+        desc: "Establish pain-free baselines. Posterior chain focus, isometrics for quads.",
+        criteria: "Can perform isometric holds at target load with ≤3/10 pain"
+    },
+    1: {
+        name: "HSR Introduction",
+        weeks: "4-7",
+        desc: "Begin isotonic loading with 3s/3s tempo. 3×15 → 3×12",
+        criteria: "Completing 3×12 at prescribed loads, pain ≤3/10, 24hr recovery"
+    },
+    2: {
+        name: "HSR Progression",
+        weeks: "8-13",
+        desc: "Progressive overload. 4×10 → 4×8 → 4×6",
+        criteria: "4×6 at target loads, strength approaching uninvolved baseline"
+    },
+    3: {
+        name: "Energy Storage",
+        weeks: "14-18+",
+        desc: "Introduce plyometrics, return to explosive movement",
+        criteria: "Sport-specific loading tolerated, 90%+ function"
+    }
+};
+
+// HSR progression by week (after Phase 0)
+const HSR = {
+    4: {sets:3, reps:15}, 5: {sets:3, reps:15},
+    6: {sets:3, reps:12}, 7: {sets:3, reps:12},
+    8: {sets:4, reps:10}, 9: {sets:4, reps:10},
+    10: {sets:4, reps:8}, 11: {sets:4, reps:8},
+    12: {sets:4, reps:6}, 13: {sets:4, reps:6},
+    14: {sets:3, reps:8}, 15: {sets:3, reps:8}, 16: {sets:3, reps:8}
+};
+
+// Daily home protocols
+const HOME = {
+    stretching: {
+        name: "Mobility",
+        freq: "2-3× daily",
+        time: "5 min",
+        exercises: [
+            "Quad stretch – 45s each leg",
+            "Hip flexor stretch (half-kneel) – 45s each",
+            "Hamstring stretch – 45s each",
+            "Calf stretch (straight + bent knee) – 30s each",
+            "Foam roll quads & IT band – 90s"
+        ]
+    },
+    isometric: {
+        name: "Isometric Loading",
+        freq: "1-2× daily",
+        time: "5 min",
+        exercises: [
+            "Wall sit hold – 3×45s @ 60-70° knee bend",
+            "Spanish squat hold (band) – 3×30s",
+            "Single leg balance – 3×30s each"
+        ]
+    }
+};
+
+// Gym sessions by phase
+const SESSIONS = {
+    tendon: {
+        name: "Tendon Loading",
+        desc: "Primary knee rehab – HSR protocol (2×/week max)",
+        phases: [0,1,2,3],
+        maxPerWeek: 2,
+        minRestDays: 2,  // 48hrs between sessions
+        getExercises: (phase, duration, week) => {
+            const hsr = HSR[week] || {sets:3, reps:15};
+            const base = [];
+
+            if (phase === 0) {
+                // Phase 0: Isometric focus, find baselines
+                // SHORT: Just the essentials
+                base.push(
+                    {name:"Leg Press Isometric Hold", rx:`3×30s hold`, note:"Find load for 3/10 pain max", track:"legPress"},
+                    {name:"Leg Extension Isometric", rx:`3×30s hold`, note:"Mid-range (60°), controlled", track:"legExtension"}
+                );
+                if (duration !== 'short') {
+                    base.push(
+                        {name:"Glute Bridge", rx:"3×15", note:"2s squeeze at top"},
+                        {name:"Banded Clamshell", rx:"3×15 each", note:"Abduction focus"}
+                    );
+                }
+                if (duration === 'long') {
+                    base.push(
+                        {name:"Side-Lying Hip Abduction", rx:"3×12 each", note:"Slow and controlled"},
+                        {name:"Banded Terminal Knee Ext", rx:"3×15", note:"VMO activation"}
+                    );
+                }
+            } else {
+                // Phase 1+: HSR protocol
+                // SHORT: Core HSR only
+                base.push(
+                    {name:"Leg Press", rx:`${hsr.sets}×${hsr.reps}`, note:"3s down, 3s up", track:"legPress", hsr:true},
+                    {name:"Leg Extension", rx:`${hsr.sets}×${hsr.reps}`, note:"3s/3s, 90-45° range", track:"legExtension", hsr:true}
+                );
+                if (duration !== 'short') {
+                    if (phase >= 2) {
+                        base.push({name:"Bulgarian Split Squat", rx:"3×8 each", note:"Depth to tolerance", track:"squat"});
+                    }
+                    base.push(
+                        {name:"Glute Bridge", rx:"3×12", note:"Add weight if easy"},
+                        {name:"Copenhagen Adductor", rx:"3×8 each", note:"Side plank position"}
+                    );
+                }
+                if (duration === 'long') {
+                    base.push(
+                        {name:"Step-Up", rx:"3×8 each", note:"Controlled, box height per tolerance"},
+                        {name:"Single Leg Hip Thrust", rx:"3×8 each", note:"Glute activation"}
+                    );
+                }
+            }
+
+            // Core (medium and long only)
+            if (duration !== 'short') {
+                base.push(
+                    {name:"Dead Bug", rx:"3×10 each", note:"Opposite arm/leg"},
+                    {name:"Pallof Press", rx:"3×10 each", note:"Anti-rotation hold 2s"}
+                );
+            }
+
+            if (duration === 'long') {
+                base.push(
+                    {name:"Side Plank", rx:"3×30s each", note:"Hip stability"},
+                    {name:"Bird Dog", rx:"3×10 each", note:"Control, no rotation"}
+                );
+            }
+
+            return base;
+        }
+    },
+    posterior: {
+        name: "Hip & Posterior",
+        desc: "Hamstring, glute, hip – tendon rest day",
+        phases: [0,1,2,3],
+        getExercises: (phase, duration, week) => {
+            const base = [
+                {name:"Kettlebell Swing", rx:"4×12", note:"Hip hinge power", track:"hipThrust"},
+                {name:"Romanian Deadlift", rx:"4×10", note:"Deep hamstring stretch", track:"rdl"},
+                {name:"Hip Thrust", rx:"4×10", note:"Barbell, pause at top", track:"hipThrust"},
+                {name:"Prone Leg Curl", rx:"3×12", note:"Machine or band"},
+                {name:"Calf Raise (seated)", rx:"4×15", note:"Soleus focus"}
+            ];
+
+            if (duration !== 'short') {
+                base.push(
+                    {name:"Good Morning", rx:"3×10", note:"Light, hip hinge pattern"},
+                    {name:"Single Leg Hip Thrust", rx:"3×8 each", note:"Glute activation"}
+                );
+            }
+
+            // Core
+            base.push(
+                {name:"Suitcase Carry", rx:"3×30m each", note:"Anti-lateral flexion"},
+                {name:"Plank", rx:"3×30-45s", note:"Hollow body position"}
+            );
+
+            if (duration === 'long') {
+                base.push(
+                    {name:"Back Extension", rx:"3×12", note:"Controlled, squeeze glutes"},
+                    {name:"Banded Hip Abduction", rx:"3×15 each", note:"Standing or side-lying"}
+                );
+            }
+
+            return base;
+        }
+    },
+    press: {
+        name: "Press Day",
+        desc: "Chest, shoulders, triceps – power focus",
+        phases: [0,1,2,3],
+        getExercises: (phase, duration, week) => {
+            const base = [
+                {name:"Med Ball Chest Pass", rx:"3×8", note:"Explosive against wall"},
+                {name:"Barbell Bench Press", rx:"4×6", note:"Explosive up, controlled down", track:"bench"},
+                {name:"DB Shoulder Press", rx:"3×8", note:"Seated or standing", track:"ohp"},
+                {name:"Face Pull", rx:"3×15", note:"External rotation at top"}
+            ];
+
+            if (duration !== 'short') {
+                base.splice(2, 0, {name:"Incline DB Press", rx:"3×8", note:"30° angle"});
+                base.push(
+                    {name:"Cable Flye", rx:"3×12", note:"Squeeze at center"},
+                    {name:"Tricep Pushdown", rx:"3×12", note:"Full lockout"}
+                );
+            }
+
+            if (duration === 'long') {
+                base.splice(1, 0, {name:"Plyo Push-Up", rx:"3×5", note:"Hands leave ground"});
+                base.push(
+                    {name:"Lateral Raise", rx:"3×12", note:"Slight forward lean"},
+                    {name:"Overhead Tricep Ext", rx:"3×12", note:"Full stretch"}
+                );
+            }
+
+            // Core
+            base.push(
+                {name:"Ab Wheel Rollout", rx:"3×8", note:"Or barbell rollout"},
+                {name:"Pallof Press", rx:"3×10 each", note:"Anti-rotation"}
+            );
+
+            return base;
+        }
+    },
+    pull: {
+        name: "Pull Day",
+        desc: "Back, biceps, rear delts – strength focus",
+        phases: [0,1,2,3],
+        getExercises: (phase, duration, week) => {
+            const base = [
+                {name:"Med Ball Slam", rx:"3×8", note:"Full hip hinge, explosive"},
+                {name:"Barbell Row", rx:"4×6", note:"Explosive pull", track:"row"},
+                {name:"Lat Pulldown", rx:"3×10", note:"Full stretch at top"},
+                {name:"Face Pull", rx:"3×15", note:"Rear delt focus"}
+            ];
+
+            if (duration !== 'short') {
+                base.splice(2, 0, {name:"Hang Power Clean", rx:"4×4", note:"Triple extension"});
+                base.push(
+                    {name:"Seated Cable Row", rx:"3×10", note:"Squeeze scapulae"},
+                    {name:"Hammer Curl", rx:"3×10", note:"Forearm/bicep"}
+                );
+            }
+
+            if (duration === 'long') {
+                base.splice(1, 0, {name:"Med Ball Rotational Throw", rx:"3×6 each", note:"Both sides"});
+                base.push(
+                    {name:"Single Arm DB Row", rx:"3×10 each", note:"Full ROM"},
+                    {name:"Reverse Flye", rx:"3×12", note:"Rear delts"},
+                    {name:"Barbell Curl", rx:"3×10", note:"Controlled"}
+                );
+            }
+
+            // Core / Back health
+            base.push(
+                {name:"Farmers Carry", rx:"3×30m", note:"Heavy, upright posture"},
+                {name:"Dead Hang", rx:"3×30s", note:"Shoulder/spine decompression"}
+            );
+
+            return base;
+        }
+    }
+};
+
+// Weight progression rules
+const PROGRESSION = {
+    // Weeks at same weight before forced increase
+    maxWeeksAtWeight: 2,
+    // Increment amounts (kg)
+    increments: {
+        legPress: 5,
+        legExtension: 2.5,
+        squat: 2.5,
+        rdl: 2.5,
+        hipThrust: 5,
+        bench: 2.5,
+        row: 2.5,
+        ohp: 1.25
+    }
+};
+
+// State
+let state = {
+    startDate: new Date().toISOString().split('T')[0],
+    currentPhase: 0,
+    days: {},
+    loads: {...USER.baselines},
+    loadHistory: {},  // {exercise: [{week, weight}]}
+    visaScores: {},
+    activeSession: null,
+    sessionDuration: 'medium',
+    tempPain: null
+};
+
+// =====================================================
+// UTILITIES
+// =====================================================
+
+const today = () => new Date().toISOString().split('T')[0];
+const getWeek = () => {
+    if (!state.startDate) return 1;
+    const diff = (new Date() - new Date(state.startDate)) / (7*24*60*60*1000);
+    return Math.max(1, Math.floor(diff) + 1);
+};
+const getPhase = () => state.currentPhase;
+const save = () => localStorage.setItem('patellarV4', JSON.stringify(state));
+const load = () => {
+    const s = localStorage.getItem('patellarV4');
+    if (s) state = {...state, ...JSON.parse(s)};
+};
+
+function getDayData(date) {
+    if (!state.days[date]) {
+        state.days[date] = {
+            stretching: [],
+            isometric: [],
+            pain: null,
+            session: null,
+            sessionData: null
+        };
+    }
+    return state.days[date];
+}
+
+function getTargetWeight(exercise) {
+    const week = getWeek();
+    const phase = getPhase();
+    const base = state.loads[exercise] || USER.baselines[exercise] || 0;
+
+    // Phase 0: Use baseline as target (finding floor)
+    if (phase === 0) return base;
+
+    // Check how long at current weight
+    const history = state.loadHistory[exercise] || [];
+    const weeksAtCurrent = history.filter(h => h.weight === base).length;
+
+    // Force progression after maxWeeksAtWeight
+    if (weeksAtCurrent >= PROGRESSION.maxWeeksAtWeight) {
+        const inc = PROGRESSION.increments[exercise] || 2.5;
+        return base + inc;
+    }
+
+    return base;
+}
+
+function recordLift(exercise, weight) {
+    const week = getWeek();
+    if (!state.loadHistory[exercise]) state.loadHistory[exercise] = [];
+    state.loadHistory[exercise].push({week, weight, date: today()});
+    state.loads[exercise] = weight;
+    save();
+}
+
+function getTendonLoadingWarning() {
+    // Check how many tendon sessions this week and when the last one was
+    const now = new Date();
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - now.getDay()); // Start of week (Sunday)
+
+    let tendonSessionsThisWeek = 0;
+    let lastTendonSession = null;
+
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        const ds = d.toISOString().split('T')[0];
+        if (state.days[ds]?.session === 'tendon') {
+            tendonSessionsThisWeek++;
+            if (!lastTendonSession) lastTendonSession = d;
+        }
+    }
+
+    // Check days since last tendon session
+    let daysSinceLast = lastTendonSession ? Math.floor((now - lastTendonSession) / (24*60*60*1000)) : 999;
+
+    // Warning conditions
+    if (tendonSessionsThisWeek >= 2) {
+        return {
+            title: "Tendon Loading Complete",
+            msg: "You've done 2 tendon sessions this week. Choose upper body or Hip & Posterior.",
+            block: true
+        };
+    }
+
+    if (daysSinceLast < 2 && daysSinceLast !== 999) {
+        return {
+            title: "Rest Day Needed",
+            msg: `Last tendon session was ${daysSinceLast === 0 ? 'today' : 'yesterday'}. Wait 48hrs between HSR sessions.`,
+            block: true
+        };
+    }
+
+    if (tendonSessionsThisWeek === 1 && daysSinceLast >= 2) {
+        return {
+            title: "Second Tendon Session Available",
+            msg: "You can do one more tendon loading session this week.",
+            block: false
+        };
+    }
+
+    return null;
+}
+
+// =====================================================
+// RENDER FUNCTIONS
+// =====================================================
+
+function render() {
+    document.getElementById('weekBadge').textContent = `Week ${getWeek()}`;
+    document.getElementById('phaseBadge').textContent = `Phase ${getPhase()}`;
+
+    renderToday();
+    renderProgress();
+    renderProgram();
+    renderSettings();
+}
+
+function renderToday() {
+    const d = getDayData(today());
+    const phase = getPhase();
+    const week = getWeek();
+    let html = '';
+
+    // Pain check
+    if (d.pain === null) {
+        html += `<div class="alert alert-warn">
+            <strong>⚡ Log morning pain</strong>
+            Track your 24-hour response to loading
+            <button class="btn btn-sm btn-primary" style="margin-top:8px" onclick="openModal('painModal')">Log Pain</button>
+        </div>`;
+    } else {
+        const painClass = d.pain <= 3 ? '' : d.pain <= 5 ? 'warn' : 'bad';
+        html += `<div class="card"><div class="card-body" style="display:flex;justify-content:space-between;align-items:center">
+            <span>Morning pain: <strong class="${painClass}">${d.pain}/10</strong></span>
+            <button class="btn btn-sm btn-outline" onclick="openModal('painModal')">Update</button>
+        </div></div>`;
+
+        if (d.pain > 5) {
+            html += `<div class="alert alert-danger">
+                <strong>Pain elevated</strong>
+                Consider isometrics only today. Skip heavy loading if pain persists.
+            </div>`;
+        }
+    }
+
+    // Phase 0 notice
+    if (phase === 0) {
+        html += `<div class="alert alert-info">
+            <strong>Phase 0: Finding Your Floor</strong>
+            Focus on isometrics and posterior chain. We're establishing pain-free baselines before loading.
+        </div>`;
+    }
+
+    // Stretching block
+    html += renderHomeBlock('stretching', d, 3);
+
+    // Isometric block
+    html += renderHomeBlock('isometric', d, 2);
+
+    // Gym session section
+    html += `<div class="card">
+        <div class="card-head gray">🏋️ Gym Session</div>
+        <div class="card-body">`;
+
+    if (d.session) {
+        html += `<div style="text-align:center;padding:10px">
+            <p style="color:var(--primary);font-weight:600">✓ ${SESSIONS[d.session].name} completed</p>
+            <button class="btn btn-sm btn-outline" style="margin-top:8px" onclick="clearSession()">Clear</button>
+        </div>`;
+    } else {
+        // Check tendon loading frequency
+        const tendonWarning = getTendonLoadingWarning();
+        if (tendonWarning) {
+            html += `<div class="alert alert-warn" style="margin-bottom:12px">
+                <strong>⚠️ ${tendonWarning.title}</strong>
+                ${tendonWarning.msg}
+            </div>`;
+        }
+
+        html += `<p style="margin-bottom:12px;color:#666;font-size:0.9em">Select a session to start:</p>
+        <div class="session-grid">`;
+
+        for (const [key, session] of Object.entries(SESSIONS)) {
+            const disabled = !session.phases.includes(phase);
+            let disabledNote = disabled ? ' (locked)' : '';
+            let extraDisabled = false;
+
+            // Disable tendon loading if too frequent
+            if (key === 'tendon' && tendonWarning?.block) {
+                extraDisabled = true;
+                disabledNote = ' (rest needed)';
+            }
+
+            html += `<div class="session-card ${disabled || extraDisabled ? 'disabled' : ''}" onclick="${disabled || extraDisabled ? '' : `startSession('${key}')`}">
+                <h4>${session.name}${disabledNote}</h4>
+                <p>${session.desc}</p>
+            </div>`;
+        }
+        html += `</div>`;
+    }
+    html += `</div></div>`;
+
+    document.getElementById('today').innerHTML = html;
+}
+
+function renderHomeBlock(type, dayData, maxChecks) {
+    const block = HOME[type];
+    const checks = dayData[type] || [];
+
+    let html = `<div class="card block-card">
+        <div class="card-head ${type === 'isometric' ? 'teal' : 'green'}">
+            ${type === 'isometric' ? '⚡' : '🧘'} ${block.name}
+            <span style="font-size:0.8em;opacity:0.9">${block.freq} • ${block.time}</span>
+        </div>
+        <div class="card-body">
+            <ul class="block-exercises">`;
+
+    block.exercises.forEach(ex => {
+        html += `<li>${ex}</li>`;
+    });
+
+    html += `</ul>
+            <div class="block-footer">
+                <span class="block-label">Completed:</span>
+                <div class="block-checks">`;
+
+    for (let i = 0; i < maxChecks; i++) {
+        const done = checks.includes(i);
+        html += `<div class="check-circle ${done ? 'done' : ''}" onclick="toggleBlock('${type}', ${i})">${done ? '✓' : i+1}</div>`;
+    }
+
+    html += `</div></div></div></div>`;
+    return html;
+}
+
+function renderProgress() {
+    const week = getWeek();
+    let html = '';
+
+    // Quick stats
+    const stats = calcStats();
+    html += `<div class="stats-grid">
+        <div class="stat-box"><div class="stat-val">${stats.streak}</div><div class="stat-lbl">Day Streak</div></div>
+        <div class="stat-box"><div class="stat-val">${stats.sessions}</div><div class="stat-lbl">Gym Sessions</div></div>
+        <div class="stat-box"><div class="stat-val">${stats.blocks}</div><div class="stat-lbl">Home Blocks</div></div>
+    </div>`;
+
+    // Load progression (main focus) - show progress toward goals
+    html += `<div class="card">
+        <div class="card-head green">📈 Load Progression</div>
+        <div class="card-body">
+            <p style="margin-bottom:12px;font-size:0.85em;color:#666">
+                Progress toward target weights. Auto-increases after ${PROGRESSION.maxWeeksAtWeight} weeks at same load.
+            </p>`;
+
+    // Define goals based on bodyweight and reasonable strength standards
+    const goals = {
+        legPress: Math.round(USER.bodyweight * 2),      // 2x BW = ~200kg
+        legExtension: Math.round(USER.bodyweight * 0.8), // ~80kg
+        squat: Math.round(USER.bodyweight * 1.25),       // 1.25x BW = ~125kg
+        rdl: Math.round(USER.bodyweight * 1),            // 1x BW = ~100kg
+        bench: Math.round(USER.bodyweight * 1),          // 1x BW = ~100kg
+        row: Math.round(USER.bodyweight * 0.75)          // 0.75x BW = ~75kg
+    };
+
+    const exercises = ['legPress', 'legExtension', 'squat', 'rdl', 'bench', 'row'];
+
+    exercises.forEach(ex => {
+        const current = state.loads[ex] || USER.baselines[ex];
+        const goal = goals[ex];
+        const pct = Math.min((current / goal) * 100, 100);
+        const target = getTargetWeight(ex);
+        const isUp = target > current;
+        const label = ex.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+
+        html += `<div class="prog-row">
+            <span class="prog-label">${label}</span>
+            <div class="prog-bar-bg">
+                <div class="prog-bar ${isUp ? 'up' : ''}" style="width:${Math.max(pct, 10)}%">
+                    ${current}kg${isUp ? ' → '+target : ''}
+                </div>
+            </div>
+            <span style="font-size:0.75em;color:#999;min-width:45px">${goal}kg</span>
+        </div>`;
+    });
+
+    html += `</div></div>`;
+
+    // Consistency (heatmap)
+    html += `<div class="card">
+        <div class="card-head">📅 Last 6 Weeks</div>
+        <div class="card-body" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">`;
+
+    for (let i = 41; i >= 0; i--) {
+        const dt = new Date();
+        dt.setDate(dt.getDate() - i);
+        const ds = dt.toISOString().split('T')[0];
+        const dd = state.days[ds];
+        let score = 0;
+        if (dd) {
+            if (dd.session) score += 3;
+            score += (dd.stretching?.length || 0);
+            score += (dd.isometric?.length || 0);
+        }
+        const cls = score === 0 ? 'background:#eee' : score <= 2 ? 'background:#c8e6c9' : score <= 4 ? 'background:#81c784' : 'background:#4caf50;color:white';
+        const isToday = i === 0 ? 'box-shadow:inset 0 0 0 2px var(--primary)' : '';
+        html += `<div style="aspect-ratio:1;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.65em;${cls};${isToday}" title="${ds}">${dt.getDate()}</div>`;
+    }
+
+    html += `</div></div>`;
+
+    // Collapsible: Pain trend
+    html += `<div class="card">
+        <div class="collapse-head" onclick="toggleCollapse(this)">
+            Pain Trend (14 days) <span>▼</span>
+        </div>
+        <div class="collapse-body">${renderPainTrend()}</div>
+    </div>`;
+
+    // Collapsible: VISA-P
+    const visa = getLatestVisa();
+    html += `<div class="card">
+        <div class="collapse-head" onclick="toggleCollapse(this)">
+            VISA-P Score: ${visa.score ?? '—'}/100 <span>▼</span>
+        </div>
+        <div class="collapse-body">
+            <p style="margin-bottom:10px;color:#666;font-size:0.9em">
+                Assess every 4+ weeks. Score &lt;80 indicates tendinopathy. MCID = 13 points.
+            </p>
+            <button class="btn btn-outline btn-sm" onclick="alert('VISA-P assessment coming soon')">Take Assessment</button>
+        </div>
+    </div>`;
+
+    document.getElementById('progress').innerHTML = html;
+}
+
+function renderPainTrend() {
+    let html = '<div style="display:flex;align-items:flex-end;gap:3px;height:60px">';
+    for (let i = 13; i >= 0; i--) {
+        const dt = new Date();
+        dt.setDate(dt.getDate() - i);
+        const ds = dt.toISOString().split('T')[0];
+        const pain = state.days[ds]?.pain;
+        const h = pain != null ? Math.max(8, pain * 5) : 5;
+        const c = pain == null ? '#ddd' : pain <= 3 ? '#4caf50' : pain <= 5 ? '#ff9800' : '#c62828';
+        html += `<div style="flex:1;height:${h}px;background:${c};border-radius:2px" title="${ds}: ${pain ?? '?'}"></div>`;
+    }
+    html += '</div><div style="display:flex;justify-content:space-between;font-size:0.7em;color:#999;margin-top:4px"><span>2w ago</span><span>Today</span></div>';
+    return html;
+}
+
+function renderProgram() {
+    const phase = getPhase();
+    const week = getWeek();
+    let html = '';
+
+    // Phase cards
+    html += `<div class="phase-row">`;
+    for (let p = 0; p <= 3; p++) {
+        const ph = PHASES[p];
+        const cls = p < phase ? 'done' : p === phase ? 'current' : '';
+        html += `<div class="phase-card ${cls}" onclick="setPhase(${p})">
+            <h5>Phase ${p}</h5>
+            <p>${ph.name}</p>
+            <p style="margin-top:4px">Wk ${ph.weeks}</p>
+        </div>`;
+    }
+    html += `</div>`;
+
+    // Current phase detail
+    const ph = PHASES[phase];
+    html += `<div class="card">
+        <div class="card-head green">Phase ${phase}: ${ph.name}</div>
+        <div class="card-body">
+            <p><strong>Weeks:</strong> ${ph.weeks}</p>
+            <p style="margin:8px 0"><strong>Goal:</strong> ${ph.desc}</p>
+            <p><strong>Advance when:</strong> ${ph.criteria}</p>
+        </div>
+    </div>`;
+
+    // HSR Protocol
+    if (phase >= 1) {
+        const hsr = HSR[week] || {sets:3, reps:15};
+        html += `<div class="card">
+            <div class="card-head">HSR Protocol – Week ${week}</div>
+            <div class="card-body">
+                <p style="margin-bottom:10px">Current prescription: <strong>${hsr.sets}×${hsr.reps}</strong> @ ${hsr.reps}RM</p>
+                <p style="font-size:0.85em;color:#666">Applies to: Leg Press, Leg Extension (3s up, 3s down tempo)</p>
+                <table style="width:100%;font-size:0.85em;margin-top:12px;border-collapse:collapse">
+                    <tr style="background:#f5f5f5"><th style="padding:6px;text-align:left">Week</th><th>Sets×Reps</th><th>Phase</th></tr>`;
+
+        [[4,'3×15',1],[6,'3×12',1],[8,'4×10',2],[10,'4×8',2],[12,'4×6',2],[14,'3×8 (maint)',3]].forEach(([w,rx,p]) => {
+            const curr = week === w ? 'background:#e8f5e9;font-weight:600' : '';
+            html += `<tr style="${curr}"><td style="padding:6px">${w}</td><td>${rx}</td><td>${p}</td></tr>`;
+        });
+
+        html += `</table></div></div>`;
+    }
+
+    // Exercise glossary by session
+    html += `<div class="card">
+        <div class="card-head">Session Overview</div>
+        <div class="card-body">`;
+
+    for (const [key, session] of Object.entries(SESSIONS)) {
+        const available = session.phases.includes(phase);
+        html += `<div style="margin-bottom:15px;opacity:${available ? 1 : 0.5}">
+            <strong>${session.name}</strong> ${available ? '' : '(Phase '+session.phases[0]+'+)'}
+            <p style="font-size:0.85em;color:#666">${session.desc}</p>
+        </div>`;
+    }
+
+    html += `</div></div>`;
+
+    document.getElementById('program').innerHTML = html;
+}
+
+function renderSettings() {
+    let html = `<div class="card">
+        <div class="card-head">Program Settings</div>
+        <div class="card-body">
+            <div style="margin-bottom:15px">
+                <label style="display:block;margin-bottom:5px;font-weight:600">Start Date</label>
+                <input type="date" value="${state.startDate}" onchange="state.startDate=this.value;save();render()"
+                       style="padding:8px;border:1px solid #ccc;border-radius:6px">
+            </div>
+            <div style="margin-bottom:15px">
+                <label style="display:block;margin-bottom:5px;font-weight:600">Current Phase</label>
+                <select onchange="setPhase(+this.value)" style="padding:8px;border:1px solid #ccc;border-radius:6px">
+                    ${[0,1,2,3].map(p => `<option value="${p}" ${state.currentPhase===p?'selected':''}>${p}: ${PHASES[p].name}</option>`).join('')}
+                </select>
+            </div>
+        </div>
+    </div>`;
+
+    // Working weights
+    html += `<div class="card">
+        <div class="card-head">Working Weights (kg)</div>
+        <div class="card-body">
+            <p style="margin-bottom:12px;font-size:0.85em;color:#666">These update automatically as you log sessions. Edit manually if needed.</p>`;
+
+    for (const [key, val] of Object.entries(state.loads)) {
+        const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+        html += `<div style="display:flex;align-items:center;margin-bottom:8px;gap:10px">
+            <label style="width:120px;font-size:0.9em">${label}</label>
+            <input type="number" value="${val}" onchange="state.loads['${key}']=+this.value;save()"
+                   style="width:80px;padding:6px;border:1px solid #ccc;border-radius:4px;text-align:center">
+            <span style="color:#666">kg</span>
+        </div>`;
+    }
+
+    html += `</div></div>`;
+
+    // Sync between devices
+    html += `<div class="card">
+        <div class="card-head">📱 Sync Between Devices</div>
+        <div class="card-body">
+            <p style="margin-bottom:12px;font-size:0.85em;color:#666">Copy data from one device, paste on the other to sync.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn btn-primary" onclick="copyDataToClipboard()">📋 Copy Data</button>
+                <button class="btn btn-outline" onclick="pasteDataFromClipboard()">📥 Paste Data</button>
+            </div>
+            <div id="syncStatus" style="margin-top:10px;font-size:0.85em"></div>
+        </div>
+    </div>`;
+
+    // Data management
+    html += `<div class="card">
+        <div class="card-head">Data</div>
+        <div class="card-body">
+            <button class="btn btn-outline" onclick="exportData()">Export JSON File</button>
+            <button class="btn btn-outline" style="margin-left:8px" onclick="if(confirm('Reset all data?')){localStorage.clear();location.reload()}">Reset All</button>
+        </div>
+    </div>`;
+
+    document.getElementById('settings').innerHTML = html;
+}
+
+// =====================================================
+// GYM SESSION FLOW
+// =====================================================
+
+function startSession(type) {
+    state.activeSession = type;
+    state.sessionExercises = [];
+
+    // Show duration picker, then exercises
+    let html = `<p style="margin-bottom:12px">Session length:</p>
+        <div class="duration-row">
+            <div class="dur-pill ${state.sessionDuration==='short'?'active':''}" onclick="setDuration('short')">Short<br><small>40min</small></div>
+            <div class="dur-pill ${state.sessionDuration==='medium'?'active':''}" onclick="setDuration('medium')">Medium<br><small>60min</small></div>
+            <div class="dur-pill ${state.sessionDuration==='long'?'active':''}" onclick="setDuration('long')">Long<br><small>90min</small></div>
+        </div>
+        <div id="sessionExercises">${renderSessionExercises()}</div>`;
+
+    document.getElementById('sessionModalBody').innerHTML = html;
+    openModal('sessionModal');
+}
+
+function setDuration(dur) {
+    state.sessionDuration = dur;
+    document.querySelectorAll('.dur-pill').forEach(p => p.classList.remove('active'));
+    event.target.closest('.dur-pill').classList.add('active');
+    document.getElementById('sessionExercises').innerHTML = renderSessionExercises();
+}
+
+function renderSessionExercises() {
+    const session = SESSIONS[state.activeSession];
+    const exercises = session.getExercises(getPhase(), state.sessionDuration, getWeek());
+
+    let html = `<p style="margin:15px 0 10px;font-weight:600">${session.name}</p><div class="ex-table">`;
+
+    exercises.forEach((ex, i) => {
+        const done = state.sessionExercises?.includes(i);
+        const targetWeight = ex.track ? getTargetWeight(ex.track) : null;
+
+        html += `<div class="ex-row">
+            <div class="ex-check ${done?'done':''}" onclick="toggleSessionEx(${i})">${done?'✓':''}</div>
+            <div class="ex-info">
+                <div class="ex-name">${ex.name}</div>
+                <div class="ex-detail">${ex.note || ''}</div>
+            </div>
+            <div class="ex-prescription">
+                ${targetWeight ? `<div class="weight">${targetWeight}kg</div>` : ''}
+                <div class="scheme">${ex.rx}</div>
+            </div>
+        </div>`;
+    });
+
+    html += `</div>`;
+    return html;
+}
+
+function toggleSessionEx(i) {
+    if (!state.sessionExercises) state.sessionExercises = [];
+    if (state.sessionExercises.includes(i)) {
+        state.sessionExercises = state.sessionExercises.filter(x => x !== i);
+    } else {
+        state.sessionExercises.push(i);
+    }
+    document.getElementById('sessionExercises').innerHTML = renderSessionExercises();
+}
+
+function finishSession() {
+    const session = SESSIONS[state.activeSession];
+    const exercises = session.getExercises(getPhase(), state.sessionDuration, getWeek());
+
+    // Record weights for tracked exercises
+    exercises.forEach((ex, i) => {
+        if (ex.track && state.sessionExercises?.includes(i)) {
+            const weight = getTargetWeight(ex.track);
+            recordLift(ex.track, weight);
+        }
+    });
+
+    // Save session completion
+    const d = getDayData(today());
+    d.session = state.activeSession;
+    d.sessionData = {
+        duration: state.sessionDuration,
+        completed: state.sessionExercises
+    };
+
+    state.activeSession = null;
+    state.sessionExercises = [];
+    save();
+    closeModal('sessionModal');
+    render();
+}
+
+function clearSession() {
+    const d = getDayData(today());
+    d.session = null;
+    d.sessionData = null;
+    save();
+    render();
+}
+
+// =====================================================
+// INTERACTIONS
+// =====================================================
+
+function toggleBlock(type, i) {
+    const d = getDayData(today());
+    if (!d[type]) d[type] = [];
+    if (d[type].includes(i)) {
+        d[type] = d[type].filter(x => x !== i);
+    } else {
+        d[type].push(i);
+    }
+    save();
+    renderToday();
+}
+
+function openModal(id) {
+    document.getElementById(id).classList.add('show');
+    if (id === 'painModal') renderPainModal();
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('show');
+}
+
+function renderPainModal() {
+    const d = getDayData(today());
+    let html = '';
+    for (let i = 0; i <= 10; i++) {
+        const sel = state.tempPain === i || (state.tempPain === null && d.pain === i);
+        const cls = sel ? (i <= 3 ? 'sel' : i <= 5 ? 'sel warn' : 'sel bad') : '';
+        html += `<div class="pain-btn ${cls}" onclick="state.tempPain=${i};renderPainModal()">${i}</div>`;
+    }
+    document.getElementById('painBtns').innerHTML = html;
+}
+
+function savePain() {
+    if (state.tempPain !== null) {
+        getDayData(today()).pain = state.tempPain;
+        state.tempPain = null;
+        save();
+    }
+    closeModal('painModal');
+    render();
+}
+
+function setPhase(p) {
+    state.currentPhase = p;
+    save();
+    render();
+}
+
+function toggleCollapse(el) {
+    const body = el.nextElementSibling;
+    body.classList.toggle('open');
+    el.querySelector('span').textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+function calcStats() {
+    const days = Object.keys(state.days);
+    let streak = 0;
+    for (let i = 0; i < 365; i++) {
+        const dt = new Date();
+        dt.setDate(dt.getDate() - i);
+        const ds = dt.toISOString().split('T')[0];
+        const dd = state.days[ds];
+        if (dd && (dd.session || dd.stretching?.length || dd.isometric?.length)) {
+            streak++;
+        } else if (i > 0) break;
+    }
+
+    return {
+        streak,
+        sessions: days.filter(d => state.days[d].session).length,
+        blocks: days.reduce((acc, d) => acc + (state.days[d].stretching?.length || 0) + (state.days[d].isometric?.length || 0), 0)
+    };
+}
+
+function getLatestVisa() {
+    const dates = Object.keys(state.visaScores).sort().reverse();
+    return dates.length ? {score: state.visaScores[dates[0]], date: dates[0]} : {score: null, date: null};
+}
+
+function exportData() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type: 'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `rehab-${today()}.json`;
+    a.click();
+}
+
+async function copyDataToClipboard() {
+    const status = document.getElementById('syncStatus');
+    try {
+        const dataStr = JSON.stringify(state);
+        await navigator.clipboard.writeText(dataStr);
+        status.innerHTML = '<span style="color:#4caf50">✓ Data copied! Paste on your other device.</span>';
+        setTimeout(() => status.innerHTML = '', 3000);
+    } catch (e) {
+        // Fallback for browsers that don't support clipboard API
+        const textarea = document.createElement('textarea');
+        textarea.value = JSON.stringify(state);
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        status.innerHTML = '<span style="color:#4caf50">✓ Data copied!</span>';
+        setTimeout(() => status.innerHTML = '', 3000);
+    }
+}
+
+async function pasteDataFromClipboard() {
+    const status = document.getElementById('syncStatus');
+    try {
+        const text = await navigator.clipboard.readText();
+        const imported = JSON.parse(text);
+
+        // Validate it looks like our data
+        if (!imported.days || !imported.loads) {
+            throw new Error('Invalid data format');
+        }
+
+        if (!confirm(`Import data from ${imported.startDate || 'unknown date'}? This will overwrite your current data.`)) {
+            return;
+        }
+
+        state = {...state, ...imported};
+        save();
+        render();
+        status.innerHTML = '<span style="color:#4caf50">✓ Data imported successfully!</span>';
+        setTimeout(() => status.innerHTML = '', 3000);
+    } catch (e) {
+        status.innerHTML = '<span style="color:#c62828">❌ Paste failed. Make sure you copied data first.</span>';
+        setTimeout(() => status.innerHTML = '', 4000);
+    }
+}
+
+// =====================================================
+// INIT
+// =====================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    load();
+
+    // Nav
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.view).classList.add('active');
+        };
+    });
+
+    render();
+});
+</script>
+</body>
+</html>
